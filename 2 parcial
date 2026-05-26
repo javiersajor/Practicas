@@ -1,0 +1,101 @@
+Prácticas OLED SSD1306 con Python
+En este documento se presentan las prácticas realizadas con una pantalla OLED SSD1306 utilizando Python y Raspberry Pi. Se incluyen explicaciones redactadas con diferentes palabras y los códigos principales utilizados en cada práctica.
+Práctica 1A: Texto Básico
+En esta práctica se mostró texto estático en diferentes posiciones de la pantalla OLED utilizando coordenadas y la fuente predeterminada.
+
+from luma.core.interface.serial import i2c
+from luma.oled.device import ssd1306
+from luma.core.render import canvas
+from PIL import ImageFont
+import time
+
+serial = i2c(port=1, address=0x3C)
+device = ssd1306(serial)
+
+font = ImageFont.load_default()
+
+with canvas(device) as draw:
+    draw.text((10,0), 'TESOEM - OLED', font=font, fill=255)
+    draw.line([(0,12),(127,12)], fill=255)
+    draw.text((0,16), 'Alumno:', font=font, fill=255)
+    draw.text((50,16), '_____________', font=font, fill=255)
+    draw.text((0,28), 'Grupo:', font=font, fill=255)
+    draw.text((50,28), '_______', font=font, fill=255)
+
+time.sleep(10)
+
+Práctica 2A: Scroll Horizontal
+Aquí se implementó un efecto de desplazamiento horizontal donde el texto se mueve continuamente por la pantalla.
+
+from luma.core.interface.serial import i2c
+from luma.oled.device import ssd1306
+from luma.core.render import canvas
+from PIL import ImageFont
+import time
+
+serial = i2c(port=1, address=0x3C)
+device = ssd1306(serial)
+
+font = ImageFont.load_default()
+
+mensaje = '>>> TESOEM Sistemas Embebidos <<<'
+ancho_texto = len(mensaje) * 6
+pos_x = device.width
+
+while True:
+    with canvas(device) as draw:
+        draw.text((pos_x,28), mensaje, font=font, fill=255)
+
+    pos_x -= 3
+
+    if pos_x < -ancho_texto:
+        pos_x = device.width
+
+    time.sleep(0.03)
+
+Práctica 3A: Estilos Visuales
+En esta práctica se trabajó con estilos visuales como texto invertido, bordes y efectos gráficos.
+
+from luma.core.interface.serial import i2c
+from luma.oled.device import ssd1306
+from luma.core.render import canvas
+from PIL import ImageFont
+import time
+
+serial = i2c(port=1, address=0x3C)
+device = ssd1306(serial)
+
+font = ImageFont.load_default()
+
+with canvas(device) as draw:
+    draw.text((2,2), 'Texto Normal', font=font, fill=255)
+
+    draw.rectangle([(2,16),(125,30)], outline=255, fill=255)
+    draw.text((4,18), 'Texto Invertido', font=font, fill=0)
+
+    draw.rectangle([(2,34),(125,48)], outline=255, fill=0)
+    draw.text((10,36), 'Texto con Borde', font=font, fill=255)
+
+time.sleep(5)
+
+Práctica 4A: Gráficos Básicos
+En esta sección se utilizaron primitivas gráficas como líneas, rectángulos y círculos para crear figuras dentro de la pantalla OLED.
+
+from luma.core.interface.serial import i2c
+from luma.oled.device import ssd1306
+from luma.core.render import canvas
+import time
+
+serial = i2c(port=1, address=0x3C)
+device = ssd1306(serial)
+
+with canvas(device) as draw:
+    draw.line([(0,0),(127,63)], fill=255)
+    draw.rectangle([(10,10),(60,40)], outline=255, fill=0)
+    draw.ellipse([(70,10),(110,50)], outline=255)
+
+time.sleep(10)
+
+Conclusión:
+
+Con estas prácticas fue posible comprender el funcionamiento de la pantalla OLED SSD1306 y aprender a trabajar con texto, animaciones, estilos visuales, gráficos y procesamiento de imágenes utilizando Python y Raspberry Pi.
